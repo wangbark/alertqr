@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ThaiD Login</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f5f7f9;color:#17212b;min-height:100vh;display:grid;place-items:center;padding:24px}
+.card{width:min(520px,100%);background:#fff;border:1px solid #e5e9ee;border-radius:22px;padding:28px;box-shadow:0 12px 35px rgba(20,30,40,.08)}
+h1{margin:0 0 8px;font-size:28px}
+p{color:#64707d;line-height:1.6}
+.status{margin:22px 0;padding:16px;border-radius:14px;background:#f1f5f7;font-weight:600}
+button{width:100%;min-height:52px;border:0;border-radius:14px;background:#17212b;color:#fff;font-size:17px;font-weight:700;cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}
+.small{font-size:13px;color:#7b8794;margin-top:14px;word-break:break-all}
+</style>
+</head>
+<body>
+<main class="card">
+<h1>ThaiD Login</h1>
+<p>กำลังค้นหา FDH Automation ที่ออนไลน์ล่าสุด</p>
+<div id="status" class="status">กำลังเชื่อมต่อ...</div>
+<button id="openBtn" type="button" disabled>เปิดหน้า ThaiD Login</button>
+<div id="detail" class="small"></div>
+</main>
+<script>
+(() => {
+  const statusEl=document.getElementById('status');
+  const detailEl=document.getElementById('detail');
+  const btn=document.getElementById('openBtn');
+  const secret=location.hash.startsWith('#') ? location.hash.slice(1).trim() : '';
+  let targetUrl='';
+
+  async function refresh(){
+    try{
+      const res=await fetch('./current.json?t='+Date.now(),{cache:'no-store'});
+      if(!res.ok) throw new Error('current.json HTTP '+res.status);
+      const data=await res.json();
+
+      if(!secret){
+        statusEl.textContent='ไม่พบ Secret ใน Bookmark';
+        detailEl.textContent='URL ต้องลงท้ายด้วย #<secret>';
+        btn.disabled=true;
+        return;
+      }
+
+      if(!data.baseUrl || data.status!=='online'){
+        statusEl.textContent='เครื่อง FDH Automation ยัง Offline';
+        detailEl.textContent='หน้านี้จะลองใหม่อัตโนมัติ';
+        btn.disabled=true;
+        return;
+      }
+
+      targetUrl=data.baseUrl.replace(/\/+$/,'')+'/thaid/'+encodeURIComponent(secret);
+      statusEl.textContent='FDH Automation Online';
+      detailEl.textContent='พร้อมเปิดหน้า ThaiD Login';
+      btn.disabled=false;
+    }
+    catch(err){
+      statusEl.textContent='กำลังรอการเชื่อมต่อ';
+      detailEl.textContent=String(err);
+      btn.disabled=true;
+    }
+  }
+
+  btn.addEventListener('click',()=>{ if(targetUrl) location.href=targetUrl; });
+  refresh();
+  setInterval(refresh,5000);
+})();
+</script>
+</body>
+</html>
