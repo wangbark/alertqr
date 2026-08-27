@@ -1,5 +1,6 @@
 {
-  "status": "offline",
-  "baseUrl": "",
-  "updatedAt": ""
+  "version": 1,
+  "status": "online",
+  "baseUrl": "https://held-going-donor-lending.trycloudflare.com",
+  "updatedAt": "2026-08-27T01:43:09.727084+00:00"
 }
