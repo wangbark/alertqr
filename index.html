@@ -2,71 +2,219 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4f7fb">
 <title>ThaiD Login</title>
 <style>
+:root{font-family:system-ui,-apple-system,"Segoe UI","Noto Sans Thai",sans-serif;color:#172033;background:#f4f7fb}
 *{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f5f7f9;color:#17212b;min-height:100vh;display:grid;place-items:center;padding:24px}
-.card{width:min(520px,100%);background:#fff;border:1px solid #e5e9ee;border-radius:22px;padding:28px;box-shadow:0 12px 35px rgba(20,30,40,.08)}
-h1{margin:0 0 8px;font-size:28px}
-p{color:#64707d;line-height:1.6}
-.status{margin:22px 0;padding:16px;border-radius:14px;background:#f1f5f7;font-weight:600}
-button{width:100%;min-height:52px;border:0;border-radius:14px;background:#17212b;color:#fff;font-size:17px;font-weight:700;cursor:pointer}
-button:disabled{opacity:.45;cursor:not-allowed}
-.small{font-size:13px;color:#7b8794;margin-top:14px;word-break:break-all}
+body{margin:0;min-height:100vh;background:#f4f7fb;color:#172033;padding:22px 16px}
+.wrap{width:min(100%,460px);margin:0 auto}
+.head{padding:10px 2px 18px}
+.head h1{margin:0;font-size:25px;letter-spacing:-.2px}
+.head p{margin:6px 0 0;color:#758094;font-size:14px}
+.card{background:#fff;border:1px solid #e5eaf1;border-radius:22px;padding:22px;box-shadow:0 14px 38px rgba(32,48,78,.08)}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:999px;background:#eef2f6;color:#657184;font-size:13px;font-weight:650}
+.dot{width:8px;height:8px;border-radius:50%;background:#98a3b2}
+.badge.ready{background:#e9f8ef;color:#187442}.badge.ready .dot{background:#27a667}
+.badge.warn{background:#fff4e6;color:#9a5b14}.badge.warn .dot{background:#e39a35}
+.badge.success{background:#e8f7ef;color:#137141}.badge.success .dot{background:#20a261}
+.badge.error{background:#fdeeee;color:#a13d3d}.badge.error .dot{background:#d45c5c}
+.status{font-size:18px;font-weight:720;margin:18px 0 4px;line-height:1.4}
+.sub{color:#7b8697;font-size:13px;line-height:1.55}
+.qrbox{display:none;margin:20px auto 4px;width:228px;max-width:75%;padding:10px;background:#fff;border:1px solid #e6ebf1;border-radius:18px}
+.qrbox img{display:block;width:100%;height:auto;border-radius:8px}
+.count{display:none;text-align:center;font-size:44px;font-weight:800;letter-spacing:-1.5px;margin:15px 0 0}
+.count span{font-size:14px;font-weight:550;color:#8490a1;margin-left:4px}
+.btn{display:block;width:100%;border:0;border-radius:15px;min-height:54px;padding:15px 18px;margin-top:20px;background:#2f6fed;color:#fff;font-size:18px;font-weight:750;text-align:center;text-decoration:none;cursor:pointer}
+.btn.disabled{background:#c9d1dd;color:#6e7989;pointer-events:none}
+.updated{text-align:center;margin-top:14px;color:#98a1af;font-size:12px}
+.note{margin-top:17px;padding-top:16px;border-top:1px solid #edf0f4;color:#7c8796;font-size:12px;line-height:1.6}
+@media (max-width:360px){.card{padding:18px}.qrbox{max-width:84%}}
 </style>
 </head>
 <body>
-<main class="card">
-<h1>ThaiD Login</h1>
-<p>กำลังค้นหา FDH Automation ที่ออนไลน์ล่าสุด</p>
-<div id="status" class="status">กำลังเชื่อมต่อ...</div>
-<button id="openBtn" type="button" disabled>เปิดหน้า ThaiD Login</button>
-<div id="detail" class="small"></div>
+<main class="wrap">
+  <header class="head">
+    <h1>ThaiD Login</h1>
+    <p>FDH Automation ยท eClaim</p>
+  </header>
+
+  <section class="card">
+    <div id="badge" class="badge"><span class="dot"></span><span id="badgeText">เธเธณเธฅเธฑเธเน€เธเธทเนเธญเธกเธ•เนเธญ...</span></div>
+
+    <div id="status" class="status">เธเธณเธฅเธฑเธเธเนเธเธซเธฒเน€เธเธฃเธทเนเธญเธ FDH Automation</div>
+    <div id="sub" class="sub">เธซเธเนเธฒเธเธตเนเธเธฐเธญเธฑเธเน€เธ”เธ• QR เนเธซเนเธญเธฑเธ•เนเธเธกเธฑเธ•เธด</div>
+
+    <div id="qrbox" class="qrbox"><img id="qr" alt="ThaiD QR Code"></div>
+    <div id="count" class="count">-- <span>เธงเธดเธเธฒเธ—เธต</span></div>
+
+    <a id="open" class="btn disabled" href="#" aria-disabled="true">เน€เธเธดเธ” ThaiD</a>
+
+    <div id="updated" class="updated"></div>
+    <div class="note">เธซเธเนเธฒ GitHub Pages เธเธตเนเธฃเธฑเธเน€เธเธเธฒเธฐ QR/Deep Link เธ—เธตเนเธกเธตเธญเธฒเธขเธธเธชเธฑเนเธเธเธฒเธ ThaiD เธเนเธฒเธ Cloudflare Tunnel เน€เธ—เนเธฒเธเธฑเนเธ เนเธกเนเธกเธต Cookie, Session เธซเธฃเธทเธญเธฃเธซเธฑเธชเธเนเธฒเธ eClaim เธ–เธนเธเธชเนเธเธญเธญเธเธกเธฒเธ—เธตเนเธซเธเนเธฒเธเธตเน</div>
+  </section>
 </main>
+
 <script>
 (() => {
-  const statusEl=document.getElementById('status');
-  const detailEl=document.getElementById('detail');
-  const btn=document.getElementById('openBtn');
-  const secret=location.hash.startsWith('#') ? location.hash.slice(1).trim() : '';
-  let targetUrl='';
+  const badge=document.getElementById('badge');
+  const badgeText=document.getElementById('badgeText');
+  const status=document.getElementById('status');
+  const sub=document.getElementById('sub');
+  const qrbox=document.getElementById('qrbox');
+  const qr=document.getElementById('qr');
+  const count=document.getElementById('count');
+  const open=document.getElementById('open');
+  const updated=document.getElementById('updated');
 
-  async function refresh(){
-    try{
-      const res=await fetch('./current.json?t='+Date.now(),{cache:'no-store'});
-      if(!res.ok) throw new Error('current.json HTTP '+res.status);
-      const data=await res.json();
+  let baseUrl='';
+  let currentLink='';
+  let expiresAt=0;
+  let serverOffset=0;
+  let lastLocatorCheck=0;
 
-      if(!secret){
-        statusEl.textContent='ไม่พบ Secret ใน Bookmark';
-        detailEl.textContent='URL ต้องลงท้ายด้วย #<secret>';
-        btn.disabled=true;
-        return;
-      }
+  function setBadge(kind,text){
+    badge.className='badge'+(kind?' '+kind:'');
+    badgeText.textContent=text;
+  }
 
-      if(!data.baseUrl || data.status!=='online'){
-        statusEl.textContent='เครื่อง FDH Automation ยัง Offline';
-        detailEl.textContent='หน้านี้จะลองใหม่อัตโนมัติ';
-        btn.disabled=true;
-        return;
-      }
+  function disableButton(){
+    currentLink='';
+    open.href='#';
+    open.classList.add('disabled');
+    open.setAttribute('aria-disabled','true');
+  }
 
-      targetUrl=data.baseUrl.replace(/\/+$/,'')+'/thaid/'+encodeURIComponent(secret);
-      statusEl.textContent='FDH Automation Online';
-      detailEl.textContent='พร้อมเปิดหน้า ThaiD Login';
-      btn.disabled=false;
+  function renderCountdown(){
+    if(!expiresAt || !currentLink){
+      count.style.display='none';
+      return;
     }
-    catch(err){
-      statusEl.textContent='กำลังรอการเชื่อมต่อ';
-      detailEl.textContent=String(err);
-      btn.disabled=true;
+
+    const left=Math.max(0,Math.ceil((expiresAt-(Date.now()+serverOffset))/1000));
+    count.style.display='block';
+    count.innerHTML=left+' <span>เธงเธดเธเธฒเธ—เธต</span>';
+
+    if(left<=0){
+      expiresAt=0;
+      disableButton();
+      qrbox.style.display='none';
+      setBadge('warn','QR เธซเธกเธ”เธญเธฒเธขเธธ');
+      status.textContent='QR เธซเธกเธ”เธญเธฒเธขเธธเนเธฅเนเธง';
+      sub.textContent='เธเธณเธฅเธฑเธเธฃเธญ QR เธฃเธญเธเนเธซเธกเนเธเธฒเธ eClaim เธญเธฑเธ•เนเธเธกเธฑเธ•เธด';
     }
   }
 
-  btn.addEventListener('click',()=>{ if(targetUrl) location.href=targetUrl; });
-  refresh();
-  setInterval(refresh,5000);
+  async function refreshLocator(force=false){
+    if(!force && Date.now()-lastLocatorCheck<4500) return;
+    lastLocatorCheck=Date.now();
+
+    const r=await fetch('./current.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok) throw new Error('current.json HTTP '+r.status);
+    const data=await r.json();
+    const candidate=String(data.baseUrl||'').replace(/\/+$/,'');
+
+    if(data.status!=='online' || !/^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/i.test(candidate))
+      throw new Error('Cloudflare Tunnel เธขเธฑเธเนเธกเนเธเธฃเนเธญเธก');
+
+    baseUrl=candidate;
+  }
+
+  async function poll(){
+    try{
+      await refreshLocator(false);
+      if(!baseUrl) throw new Error('เธขเธฑเธเนเธกเนเธกเธต Tunnel');
+
+      const r=await fetch(baseUrl+'/api/thaid/public-state?t='+Date.now(),{
+        cache:'no-store',
+        mode:'cors'
+      });
+      if(!r.ok) throw new Error('FDH HTTP '+r.status);
+
+      const s=await r.json();
+      serverOffset=new Date(s.serverTime).getTime()-Date.now();
+      updated.textContent=s.updatedAt ? 'เธญเธฑเธเน€เธ”เธ•เธฅเนเธฒเธชเธธเธ” '+new Date(s.updatedAt).toLocaleTimeString('th-TH') : '';
+
+      if(s.status==='logged-in'){
+        expiresAt=0;
+        disableButton();
+        qrbox.style.display='none';
+        count.style.display='none';
+        setBadge('success','Login เธชเธณเน€เธฃเนเธ');
+        status.textContent='eClaim Login เธชเธณเน€เธฃเนเธ โ“';
+        sub.textContent='Session เธเธฃเนเธญเธกเนเธเนเธเธฒเธเนเธฅเนเธง เนเธกเนเธ•เนเธญเธเธชเนเธเธเธเนเธณ';
+        return;
+      }
+
+      if(s.active && s.deepLink){
+        currentLink=String(s.deepLink);
+        expiresAt=new Date(s.expiresAt).getTime();
+
+        open.href=currentLink;
+        open.classList.remove('disabled');
+        open.setAttribute('aria-disabled','false');
+
+        if(s.imageBase64){
+          qr.src='data:image/png;base64,'+s.imageBase64;
+          qrbox.style.display='block';
+        }else{
+          qrbox.style.display='none';
+        }
+
+        setBadge('ready','เธเธฃเนเธญเธกเนเธเนเธเธฒเธ');
+        status.textContent='QR ThaiD เธเธฃเนเธญเธกเนเธฅเนเธง';
+        sub.textContent='เธเธ” โ€เน€เธเธดเธ” ThaiDโ€ เธซเธฃเธทเธญเธชเนเธเธ QR เธเธฒเธเธญเธตเธเน€เธเธฃเธทเนเธญเธ';
+        renderCountdown();
+        return;
+      }
+
+      expiresAt=0;
+      disableButton();
+      qrbox.style.display='none';
+      count.style.display='none';
+
+      if(s.status==='expired'){
+        setBadge('warn','QR เธซเธกเธ”เธญเธฒเธขเธธ');
+        status.textContent='QR เธซเธกเธ”เธญเธฒเธขเธธเนเธฅเนเธง';
+        sub.textContent='เธฃเธฐเธเธ eClaim เธเธณเธฅเธฑเธเธชเธฃเนเธฒเธ QR เนเธซเธกเนเธญเธฑเธ•เนเธเธกเธฑเธ•เธด';
+      }else if(s.status==='error'){
+        setBadge('error','เน€เธเธดเธ”เธเนเธญเธเธดเธ”เธเธฅเธฒเธ”');
+        status.textContent='เธเธฒเธฃ Login เธกเธตเธเธฑเธเธซเธฒ';
+        sub.textContent='เธ•เธฃเธงเธเธชเธญเธ FDH Automation เธ—เธตเนเน€เธเธฃเธทเนเธญเธเธซเธฅเธฑเธ';
+      }else{
+        setBadge('','เธฃเธญ QR');
+        status.textContent='เธเธณเธฅเธฑเธเธฃเธญ QR เธเธฒเธ eClaim';
+        sub.textContent='เน€เธฃเธดเนเธก Login eClaim เธ—เธตเน FDH Automation เนเธฅเนเธง QR เธเธฐเธเธถเนเธเธ—เธตเนเธเธตเนเธญเธฑเธ•เนเธเธกเธฑเธ•เธด';
+      }
+    }catch(e){
+      baseUrl='';
+      expiresAt=0;
+      disableButton();
+      qrbox.style.display='none';
+      count.style.display='none';
+      setBadge('error','เธขเธฑเธเน€เธเธทเนเธญเธกเธ•เนเธญเนเธกเนเนเธ”เน');
+      status.textContent='เธเธณเธฅเธฑเธเธฃเธญ FDH Automation';
+      sub.textContent='เธเธณเธฅเธฑเธเธเนเธเธซเธฒ Cloudflare Tunnel เธฅเนเธฒเธชเธธเธ”...';
+      updated.textContent='';
+      try{await refreshLocator(true);}catch(_){}
+    }
+  }
+
+  open.addEventListener('click',e=>{
+    if(!currentLink){
+      e.preventDefault();
+      return;
+    }
+    setTimeout(()=>{
+      status.textContent='เน€เธเธดเธ” ThaiD เนเธฅเนเธง';
+      sub.textContent='เธขเธทเธเธขเธฑเธเธ•เธฑเธงเธ•เธเนเธเนเธญเธ ThaiD เนเธฅเนเธงเธเธฅเธฑเธเธกเธฒเธซเธเนเธฒเธเธตเนเนเธ”เน';
+    },250);
+  });
+
+  poll();
+  setInterval(poll,1000);
+  setInterval(renderCountdown,250);
 })();
 </script>
 </body>
