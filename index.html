@@ -121,7 +121,7 @@ button,a,input{font-family:inherit}
       serverOffset=new Date(s.serverTime).getTime()-Date.now();
       updated.textContent=s.updatedAt?'อัปเดตล่าสุด '+new Date(s.updatedAt).toLocaleTimeString('th-TH'):'';
 
-      if(s.status==='logged-in'){
+      if(s.sessionStatus==='logged-in'){
         expiresAt=0;
         disableButton();
         qrbox.style.display='none';
@@ -158,18 +158,30 @@ button,a,input{font-family:inherit}
       qrbox.style.display='none';
       count.style.display='none';
 
-      if(s.status==='expired'){
+      if(s.sessionStatus==='checking'){
+        setBadge('','กำลังตรวจ Session');
+        status.textContent='กำลังตรวจ eClaim Session';
+        sub.textContent='รอสักครู่ ระบบกำลังตรวจ Cookie/Session จริงจาก WebView2';
+      }else if(s.sessionStatus==='login-required'){
+        setBadge('warn','ต้อง Login');
+        status.textContent='eClaim ต้อง Login ใหม่';
+        sub.textContent='FDH Automation จะเปิด OSS → ThaiD และสร้าง QR ให้อัตโนมัติ';
+      }else if(s.sessionStatus==='logging-in'||s.sessionStatus==='waiting-confirmation'){
+        setBadge('','กำลัง Login');
+        status.textContent='กำลังเตรียม ThaiD Login';
+        sub.textContent='QR จะขึ้นอัตโนมัติเมื่อพร้อม';
+      }else if(s.sessionStatus==='expired'||s.qrStatus==='expired'){
         setBadge('warn','QR หมดอายุ');
         status.textContent='กำลังสร้าง QR ใหม่';
         sub.textContent='รอสักครู่ ระบบจะอัปเดตให้อัตโนมัติ';
-      }else if(s.status==='error'){
+      }else if(s.sessionStatus==='error'){
         setBadge('error','Login ไม่สำเร็จ');
         status.textContent='มีปัญหาในการ Login';
         sub.textContent='ตรวจสอบแอป FDH Automation ที่เครื่องหลัก';
       }else{
         setBadge('','รอ Login');
-        status.textContent='กำลังรอ QR จาก eClaim';
-        sub.textContent='เปิด FDH Automation แล้วระบบจะตรวจ Session และ Login ให้อัตโนมัติ';
+        status.textContent='กำลังรอ eClaim Session';
+        sub.textContent='เปิด FDH Automation แล้วระบบจะตรวจ Session ให้อัตโนมัติ';
       }
     }catch(e){
       baseUrl='';
