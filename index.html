@@ -9,12 +9,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap');
 :root{font-family:"Sarabun",system-ui,-apple-system,"Segoe UI",sans-serif;color:#172033;background:#f4f7fb}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:#f4f7fb;color:#172033;padding:22px 16px;font-family:"Sarabun",system-ui,-apple-system,"Segoe UI",sans-serif}
+body{margin:0;min-height:100vh;background:#f4f7fb;color:#172033;padding:30px 16px;font-family:"Sarabun",system-ui,-apple-system,"Segoe UI",sans-serif}
 button,a,input{font-family:inherit}
 .wrap{width:min(100%,460px);margin:0 auto}
-.head{padding:10px 2px 18px;text-align:center}
-.head h1{margin:0;font-size:27px;font-weight:700}
-.head p{margin:6px 0 0;color:#758094;font-size:15px}
+.head{padding:0 0 18px;text-align:center}
+.head h1{margin:0;font-size:29px;font-weight:700;letter-spacing:0}
 .card{background:#fff;border:1px solid #e5eaf1;border-radius:22px;padding:22px;box-shadow:0 14px 38px rgba(32,48,78,.08)}
 .badge{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:999px;background:#eef2f6;color:#657184;font-size:14px;font-weight:600}
 .dot{width:8px;height:8px;border-radius:50%;background:#98a3b2}
@@ -31,7 +30,6 @@ button,a,input{font-family:inherit}
 .btn{display:block;width:100%;border:0;border-radius:15px;min-height:56px;padding:15px 18px;margin-top:20px;background:#2f6fed;color:#fff;font-size:20px;font-weight:700;text-align:center;text-decoration:none;cursor:pointer}
 .btn.disabled{background:#c9d1dd;color:#6e7989;pointer-events:none}
 .updated{text-align:center;margin-top:14px;color:#98a1af;font-size:13px}
-.note{margin-top:17px;padding-top:16px;border-top:1px solid #edf0f4;color:#7c8796;font-size:13px;line-height:1.7}
 @media(max-width:360px){.card{padding:18px}.qrbox{max-width:88%}}
 </style>
 </head>
@@ -39,22 +37,18 @@ button,a,input{font-family:inherit}
 <main class="wrap">
   <header class="head">
     <h1>ThaiD Login</h1>
-    <p>FDH Automation &middot; eClaim</p>
   </header>
 
   <section class="card">
-    <div id="badge" class="badge"><span class="dot"></span><span id="badgeText">&#3585;&#3635;&#3621;&#3633;&#3591;&#3648;&#3594;&#3639;&#3656;&#3629;&#3617;&#3605;&#3656;&#3629;...</span></div>
-    <div id="status" class="status">&#3585;&#3635;&#3621;&#3633;&#3591;&#3588;&#3657;&#3609;&#3627;&#3634;&#3648;&#3588;&#3619;&#3639;&#3656;&#3629;&#3591; FDH Automation</div>
-    <div id="sub" class="sub">&#3627;&#3609;&#3657;&#3634;&#3609;&#3637;&#3657;&#3592;&#3632;&#3629;&#3633;&#3611;&#3648;&#3604;&#3605; QR &#3651;&#3627;&#3657;&#3629;&#3633;&#3605;&#3650;&#3609;&#3617;&#3633;&#3605;&#3636;</div>
+    <div id="badge" class="badge"><span class="dot"></span><span id="badgeText">กำลังเชื่อมต่อ...</span></div>
+    <div id="status" class="status">กำลังรอ FDH Automation</div>
+    <div id="sub" class="sub">QR จะอัปเดตอัตโนมัติเมื่อระบบต้อง Login</div>
+
     <div id="qrbox" class="qrbox"><img id="qr" alt="ThaiD QR Code"></div>
-    <div id="count" class="count">-- <span>&#3623;&#3636;&#3609;&#3634;&#3607;&#3637;</span></div>
-    <a id="open" class="btn disabled" href="#" aria-disabled="true">&#3648;&#3611;&#3636;&#3604; ThaiD</a>
+    <div id="count" class="count">-- <span>วินาที</span></div>
+
+    <a id="open" class="btn disabled" href="#" aria-disabled="true">เปิด ThaiD</a>
     <div id="updated" class="updated"></div>
-    <div class="note">
-      &#3627;&#3609;&#3657;&#3634;&#3609;&#3637;&#3657;&#3649;&#3626;&#3604;&#3591;&#3648;&#3593;&#3614;&#3634;&#3632; QR &#3649;&#3621;&#3632; Deep Link &#3594;&#3633;&#3656;&#3623;&#3588;&#3619;&#3634;&#3623;&#3592;&#3634;&#3585; ThaiD
-      &#3612;&#3656;&#3634;&#3609; Cloudflare Tunnel &#3648;&#3607;&#3656;&#3634;&#3609;&#3633;&#3657;&#3609;
-      &#3652;&#3617;&#3656;&#3617;&#3637; Cookie, Session &#3627;&#3619;&#3639;&#3629;&#3619;&#3627;&#3633;&#3626;&#3612;&#3656;&#3634;&#3609; eClaim &#3606;&#3641;&#3585;&#3626;&#3656;&#3591;&#3617;&#3634;&#3607;&#3637;&#3656;&#3627;&#3609;&#3657;&#3634;&#3609;&#3637;&#3657;
-    </div>
   </section>
 </main>
 
@@ -76,40 +70,33 @@ button,a,input{font-family:inherit}
   let serverOffset=0;
   let lastLocatorCheck=0;
 
-  const T={
-    tunnelNotReady:'Cloudflare Tunnel \u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e1e\u0e23\u0e49\u0e2d\u0e21',
-    notConnected:'\u0e22\u0e31\u0e07\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d\u0e44\u0e21\u0e48\u0e44\u0e14\u0e49',
-    waitingFDH:'\u0e01\u0e33\u0e25\u0e31\u0e07\u0e23\u0e2d FDH Automation',
-    findingTunnel:'\u0e01\u0e33\u0e25\u0e31\u0e07\u0e04\u0e49\u0e19\u0e2b\u0e32 Cloudflare Tunnel \u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14...',
-    loggedIn:'Login \u0e2a\u0e33\u0e40\u0e23\u0e47\u0e08',
-    eclaimLogged:'eClaim Login \u0e2a\u0e33\u0e40\u0e23\u0e47\u0e08 \u2713',
-    sessionReady:'Session \u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e43\u0e0a\u0e49\u0e07\u0e32\u0e19\u0e41\u0e25\u0e49\u0e27 \u0e44\u0e21\u0e48\u0e15\u0e49\u0e2d\u0e07\u0e2a\u0e41\u0e01\u0e19\u0e0b\u0e49\u0e33',
-    ready:'\u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e43\u0e0a\u0e49\u0e07\u0e32\u0e19',
-    qrReady:'QR ThaiD \u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e41\u0e25\u0e49\u0e27',
-    pressOrScan:'\u0e01\u0e14 \u201c\u0e40\u0e1b\u0e34\u0e14 ThaiD\u201d \u0e2b\u0e23\u0e37\u0e2d\u0e2a\u0e41\u0e01\u0e19 QR \u0e08\u0e32\u0e01\u0e2d\u0e35\u0e01\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07',
-    expired:'QR \u0e2b\u0e21\u0e14\u0e2d\u0e32\u0e22\u0e38',
-    expiredLong:'QR \u0e2b\u0e21\u0e14\u0e2d\u0e32\u0e22\u0e38\u0e41\u0e25\u0e49\u0e27',
-    waitingNew:'\u0e01\u0e33\u0e25\u0e31\u0e07\u0e23\u0e2d QR \u0e23\u0e2d\u0e1a\u0e43\u0e2b\u0e21\u0e48\u0e08\u0e32\u0e01 eClaim \u0e2d\u0e31\u0e15\u0e42\u0e19\u0e21\u0e31\u0e15\u0e34',
-    error:'\u0e40\u0e01\u0e34\u0e14\u0e02\u0e49\u0e2d\u0e1c\u0e34\u0e14\u0e1e\u0e25\u0e32\u0e14',
-    loginProblem:'\u0e01\u0e32\u0e23 Login \u0e21\u0e35\u0e1b\u0e31\u0e0d\u0e2b\u0e32',
-    checkMain:'\u0e15\u0e23\u0e27\u0e08\u0e2a\u0e2d\u0e1a FDH Automation \u0e17\u0e35\u0e48\u0e40\u0e04\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e2b\u0e25\u0e31\u0e01',
-    waitQr:'\u0e23\u0e2d QR',
-    waitFromEclaim:'\u0e01\u0e33\u0e25\u0e31\u0e07\u0e23\u0e2d QR \u0e08\u0e32\u0e01 eClaim',
-    startLogin:'\u0e40\u0e23\u0e34\u0e48\u0e21 Login eClaim \u0e17\u0e35\u0e48 FDH Automation \u0e41\u0e25\u0e49\u0e27 QR \u0e08\u0e30\u0e02\u0e36\u0e49\u0e19\u0e17\u0e35\u0e48\u0e19\u0e35\u0e48\u0e2d\u0e31\u0e15\u0e42\u0e19\u0e21\u0e31\u0e15\u0e34',
-    opened:'\u0e40\u0e1b\u0e34\u0e14 ThaiD \u0e41\u0e25\u0e49\u0e27',
-    confirmAndReturn:'\u0e22\u0e37\u0e19\u0e22\u0e31\u0e19\u0e15\u0e31\u0e27\u0e15\u0e19\u0e43\u0e19\u0e41\u0e2d\u0e1b ThaiD \u0e41\u0e25\u0e49\u0e27\u0e01\u0e25\u0e31\u0e1a\u0e21\u0e32\u0e2b\u0e19\u0e49\u0e32\u0e19\u0e35\u0e49\u0e44\u0e14\u0e49',
-    updated:'\u0e2d\u0e31\u0e1b\u0e40\u0e14\u0e15\u0e25\u0e48\u0e32\u0e2a\u0e38\u0e14 '
-  };
+  function setBadge(kind,text){
+    badge.className='badge'+(kind?' '+kind:'');
+    badgeText.textContent=text;
+  }
 
-  function setBadge(kind,text){badge.className='badge'+(kind?' '+kind:'');badgeText.textContent=text}
-  function disableButton(){currentLink='';open.href='#';open.classList.add('disabled');open.setAttribute('aria-disabled','true')}
+  function disableButton(){
+    currentLink='';
+    open.href='#';
+    open.classList.add('disabled');
+    open.setAttribute('aria-disabled','true');
+  }
+
   function renderCountdown(){
     if(!expiresAt||!currentLink){count.style.display='none';return}
     const left=Math.max(0,Math.ceil((expiresAt-(Date.now()+serverOffset))/1000));
     count.style.display='block';
-    count.innerHTML=left+' <span>\u0e27\u0e34\u0e19\u0e32\u0e17\u0e35</span>';
-    if(left<=0){expiresAt=0;disableButton();qrbox.style.display='none';setBadge('warn',T.expired);status.textContent=T.expiredLong;sub.textContent=T.waitingNew}
+    count.innerHTML=left+' <span>วินาที</span>';
+    if(left<=0){
+      expiresAt=0;
+      disableButton();
+      qrbox.style.display='none';
+      setBadge('warn','QR หมดอายุ');
+      status.textContent='กำลังสร้าง QR ใหม่';
+      sub.textContent='รอสักครู่ ระบบจะอัปเดตให้อัตโนมัติ';
+    }
   }
+
   async function refreshLocator(force=false){
     if(!force&&Date.now()-lastLocatorCheck<4500)return;
     lastLocatorCheck=Date.now();
@@ -117,43 +104,98 @@ button,a,input{font-family:inherit}
     if(!r.ok)throw new Error('current.json HTTP '+r.status);
     const data=await r.json();
     const candidate=String(data.baseUrl||'').replace(/\/+$/,'');
-    if(data.status!=='online'||!/^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/i.test(candidate))throw new Error(T.tunnelNotReady);
+    if(data.status!=='online'||!/^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/i.test(candidate))
+      throw new Error('Tunnel not ready');
     baseUrl=candidate;
   }
+
   async function poll(){
     try{
       await refreshLocator(false);
-      if(!baseUrl)throw new Error(T.tunnelNotReady);
+      if(!baseUrl)throw new Error('Tunnel not ready');
+
       const r=await fetch(baseUrl+'/api/thaid/public-state?t='+Date.now(),{cache:'no-store',mode:'cors'});
       if(!r.ok)throw new Error('FDH HTTP '+r.status);
+
       const s=await r.json();
       serverOffset=new Date(s.serverTime).getTime()-Date.now();
-      updated.textContent=s.updatedAt?T.updated+new Date(s.updatedAt).toLocaleTimeString('th-TH'):'';
+      updated.textContent=s.updatedAt?'อัปเดตล่าสุด '+new Date(s.updatedAt).toLocaleTimeString('th-TH'):'';
+
       if(s.status==='logged-in'){
-        expiresAt=0;disableButton();qrbox.style.display='none';count.style.display='none';
-        setBadge('success',T.loggedIn);status.textContent=T.eclaimLogged;sub.textContent=T.sessionReady;return;
+        expiresAt=0;
+        disableButton();
+        qrbox.style.display='none';
+        count.style.display='none';
+        setBadge('success','Login สำเร็จ');
+        status.textContent='eClaim พร้อมใช้งาน ✓';
+        sub.textContent='Session ยังใช้งานได้ ไม่ต้อง Login ซ้ำ';
+        return;
       }
+
       if(s.active&&s.deepLink){
-        currentLink=String(s.deepLink);expiresAt=new Date(s.expiresAt).getTime();
-        open.href=currentLink;open.classList.remove('disabled');open.setAttribute('aria-disabled','false');
-        if(s.imageBase64){qr.src='data:image/png;base64,'+s.imageBase64;qrbox.style.display='block'}else{qrbox.style.display='none'}
-        setBadge('ready',T.ready);status.textContent=T.qrReady;sub.textContent=T.pressOrScan;renderCountdown();return;
+        currentLink=String(s.deepLink);
+        expiresAt=new Date(s.expiresAt).getTime();
+        open.href=currentLink;
+        open.classList.remove('disabled');
+        open.setAttribute('aria-disabled','false');
+
+        if(s.imageBase64){
+          qr.src='data:image/png;base64,'+s.imageBase64;
+          qrbox.style.display='block';
+        }else{
+          qrbox.style.display='none';
+        }
+
+        setBadge('ready','พร้อม Login');
+        status.textContent='QR ThaiD พร้อมแล้ว';
+        sub.textContent='กด “เปิด ThaiD” เพื่อยืนยันตัวตน';
+        renderCountdown();
+        return;
       }
-      expiresAt=0;disableButton();qrbox.style.display='none';count.style.display='none';
-      if(s.status==='expired'){setBadge('warn',T.expired);status.textContent=T.expiredLong;sub.textContent=T.waitingNew}
-      else if(s.status==='error'){setBadge('error',T.error);status.textContent=T.loginProblem;sub.textContent=T.checkMain}
-      else{setBadge('',T.waitQr);status.textContent=T.waitFromEclaim;sub.textContent=T.startLogin}
+
+      expiresAt=0;
+      disableButton();
+      qrbox.style.display='none';
+      count.style.display='none';
+
+      if(s.status==='expired'){
+        setBadge('warn','QR หมดอายุ');
+        status.textContent='กำลังสร้าง QR ใหม่';
+        sub.textContent='รอสักครู่ ระบบจะอัปเดตให้อัตโนมัติ';
+      }else if(s.status==='error'){
+        setBadge('error','Login ไม่สำเร็จ');
+        status.textContent='มีปัญหาในการ Login';
+        sub.textContent='ตรวจสอบแอป FDH Automation ที่เครื่องหลัก';
+      }else{
+        setBadge('','รอ Login');
+        status.textContent='กำลังรอ QR จาก eClaim';
+        sub.textContent='เปิด FDH Automation แล้วระบบจะตรวจ Session และ Login ให้อัตโนมัติ';
+      }
     }catch(e){
-      baseUrl='';expiresAt=0;disableButton();qrbox.style.display='none';count.style.display='none';
-      setBadge('error',T.notConnected);status.textContent=T.waitingFDH;sub.textContent=T.findingTunnel;updated.textContent='';
+      baseUrl='';
+      expiresAt=0;
+      disableButton();
+      qrbox.style.display='none';
+      count.style.display='none';
+      setBadge('error','ยังเชื่อมต่อไม่ได้');
+      status.textContent='กำลังรอ FDH Automation';
+      sub.textContent='กำลังค้นหาการเชื่อมต่อล่าสุด...';
+      updated.textContent='';
       try{await refreshLocator(true)}catch(_){}
     }
   }
+
   open.addEventListener('click',e=>{
     if(!currentLink){e.preventDefault();return}
-    setTimeout(()=>{status.textContent=T.opened;sub.textContent=T.confirmAndReturn},250)
+    setTimeout(()=>{
+      status.textContent='เปิด ThaiD แล้ว';
+      sub.textContent='ยืนยันในแอป ThaiD แล้วกลับมาหน้านี้ได้';
+    },250);
   });
-  poll();setInterval(poll,1000);setInterval(renderCountdown,250);
+
+  poll();
+  setInterval(poll,1000);
+  setInterval(renderCountdown,250);
 })();
 </script>
 </body>
