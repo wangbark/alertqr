@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f4f7fb">
+<meta name="fdh-build" content="FDH-ALERTQR-OTP-PRIORITY-20260827-1845">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Login</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap');
@@ -59,6 +63,7 @@ button,a{font-family:inherit}
 </main>
 <script>
 (() => {
+  const BUILD='FDH-ALERTQR-OTP-PRIORITY-20260827-1845';
   const title=document.getElementById('title'),badge=document.getElementById('badge'),badgeText=document.getElementById('badgeText');
   const status=document.getElementById('status'),sub=document.getElementById('sub'),qrbox=document.getElementById('qrbox'),qr=document.getElementById('qr');
   const count=document.getElementById('count'),open=document.getElementById('open'),updated=document.getElementById('updated');
@@ -88,20 +93,43 @@ button,a{font-family:inherit}
   function renderOtp(p){
     clearAction();
     title.textContent='FDH OTP';
-    setBadge(p.otpStatus==='received'||p.otpStatus==='processing'?'ready':'','รอ OTP');
-    status.textContent=p.otpStatus==='received'||p.otpStatus==='processing'
-      ? 'รับ OTP แล้ว · กำลังส่งเข้า FDH'
-      : 'กรอกรหัส OTP 6 หลัก';
+
+    const s=String(p.otpStatus||'').toLowerCase();
+
+    if(s==='received'||s==='processing'){
+      setBadge('ready','รับ OTP แล้ว');
+      status.textContent='รับ OTP แล้ว · กำลังส่งเข้า FDH';
+    }else if(s==='expired'){
+      setBadge('warn','OTP หมดอายุ');
+      status.textContent='OTP หมดอายุ';
+    }else if(s==='error'){
+      setBadge('error','OTP มีปัญหา');
+      status.textContent='OTP ยังไม่ผ่าน';
+    }else{
+      setBadge('','รอ OTP');
+      status.textContent='กรอกรหัส OTP 6 หลัก';
+    }
+
     sub.textContent=p.otpMessage||'เปิด LINE OA หมอพร้อม คัดลอก OTP แล้ววางที่นี่';
     otpref.textContent=p.otpRefCode ? 'Ref: '+p.otpRefCode : '';
+
     otpbox.style.display='block';
-    otpbtn.disabled=p.otpStatus!=='waiting';
-    otpinput.disabled=p.otpStatus!=='waiting';
+    const writable=s==='waiting';
+    otpbtn.disabled=!writable;
+    otpinput.disabled=!writable;
+
+    if(writable){
+      setTimeout(()=>{try{otpinput.focus()}catch{}},80);
+    }
+
     if(p.otpExpiresAt){
       expiresAt=new Date(p.otpExpiresAt).getTime();
       renderCountdown();
     }
-    updated.textContent=p.otpUpdatedAt?'อัปเดตล่าสุด '+new Date(p.otpUpdatedAt).toLocaleTimeString('th-TH'):'';
+
+    updated.textContent=p.otpUpdatedAt
+      ? 'อัปเดตล่าสุด '+new Date(p.otpUpdatedAt).toLocaleTimeString('th-TH')
+      : '';
   }
 
   async function submitOtp(){
@@ -165,7 +193,12 @@ button,a{font-family:inherit}
   otpbtn.addEventListener('click',submitOtp);
 
   function renderProvider(p){
-    if(p.otpRequired){
+    const otpState=String(p?.otpStatus||'').toLowerCase();
+    const hasOtpState=
+      p?.otpRequired===true ||
+      ['waiting','received','processing','expired','error'].includes(otpState);
+
+    if(hasOtpState){
       renderOtp(p);
       return true;
     }
@@ -203,20 +236,71 @@ button,a{font-family:inherit}
 
   async function poll(){
     try{
-      await refreshLocator(false);if(!baseUrl)throw 0;
-      const [p,t]=await Promise.all([getState('/api/provider/public-state'),getState('/api/thaid/public-state')]);
-      const serverTime=p?.serverTime||t?.serverTime;if(serverTime)serverOffset=new Date(serverTime).getTime()-Date.now();
-      if(p&&(p.otpRequired||p.active||['logging-in','waiting-qr','login-required','error','expired'].includes(p.status))){renderProvider(p);return}
-      if(t){renderThaid(t);return}
-      if(p){renderProvider(p);return}
+      await refreshLocator(false);
+      if(!baseUrl) throw 0;
+
+      const [p,t]=await Promise.all([
+        getState('/api/provider/public-state'),
+        getState('/api/thaid/public-state')
+      ]);
+
+      const serverTime=p?.serverTime||t?.serverTime;
+      if(serverTime){
+        serverOffset=new Date(serverTime).getTime()-Date.now();
+      }
+
+      // ABSOLUTE PRIORITY: FDH OTP.
+      // Even if eClaim is simultaneously login-required, OTP must own the mobile
+      // screen until it is submitted/expired.
+      const otpState=String(p?.otpStatus||'').toLowerCase();
+      const otpActive=
+        p?.otpRequired===true ||
+        ['waiting','received','processing','expired','error'].includes(otpState);
+
+      if(p && otpActive){
+        renderOtp(p);
+        return;
+      }
+
+      // Next priority: active FDH/provider flow.
+      if(p && (
+        p.active ||
+        ['credential-login','account-confirm','logging-in','waiting-qr','login-required','error','expired']
+          .includes(String(p.status||'').toLowerCase())
+      )){
+        renderProvider(p);
+        return;
+      }
+
+      // eClaim/ThaiD only owns the page when there is no active FDH/OTP flow.
+      if(t){
+        renderThaid(t);
+        return;
+      }
+
+      if(p){
+        renderProvider(p);
+        return;
+      }
+
       throw 0;
     }catch{
-      baseUrl='';clearAction();title.textContent='Login';setBadge('error','ยังเชื่อมต่อไม่ได้');status.textContent='กำลังรอ FDH Automation';sub.textContent='กำลังค้นหาการเชื่อมต่อล่าสุด...';updated.textContent='';
+      baseUrl='';
+      clearAction();
+      title.textContent='Login';
+      setBadge('error','ยังเชื่อมต่อไม่ได้');
+      status.textContent='กำลังรอ FDH Automation';
+      sub.textContent='กำลังค้นหาการเชื่อมต่อล่าสุด...';
+      updated.textContent='';
       try{await refreshLocator(true)}catch{}
     }
   }
-  poll();setInterval(poll,1000);setInterval(renderCountdown,250);
+
+  poll();
+  setInterval(poll,800);
+  setInterval(renderCountdown,250);
 })();
 </script>
+<div id="fdhBuild" data-build="FDH-ALERTQR-OTP-PRIORITY-20260827-1845" style="display:none"></div>
 </body>
 </html>
