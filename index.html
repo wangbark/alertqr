@@ -4,81 +4,145 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f4f7fb">
-<meta name="fdh-build" content="FDH-ALERTQR-OTP-PRIORITY-20260827-1845">
+<meta name="allc-build" content="ALLC-LINE-ONCE-WEB-STATUS-20260831-1115">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Login</title>
+<title>AllC Login</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap');
 :root{font-family:"Sarabun",system-ui,-apple-system,"Segoe UI",sans-serif;color:#172033;background:#f4f7fb}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:#f4f7fb;color:#172033;padding:30px 16px;font-family:"Sarabun",system-ui,-apple-system,"Segoe UI",sans-serif}
-button,a{font-family:inherit}
-.wrap{width:min(100%,460px);margin:0 auto}
-.head{padding:0 0 18px;text-align:center}.head h1{margin:0;font-size:29px;font-weight:700}
-.card{background:#fff;border:1px solid #e5eaf1;border-radius:22px;padding:22px;box-shadow:0 14px 38px rgba(32,48,78,.08)}
-.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:999px;background:#eef2f6;color:#657184;font-size:14px;font-weight:600}
-.dot{width:8px;height:8px;border-radius:50%;background:#98a3b2}
-.badge.ready{background:#e9f8ef;color:#187442}.badge.ready .dot{background:#27a667}
-.badge.warn{background:#fff4e6;color:#9a5b14}.badge.warn .dot{background:#e39a35}
-.badge.success{background:#e8f7ef;color:#137141}.badge.success .dot{background:#20a261}
-.badge.error{background:#fdeeee;color:#a13d3d}.badge.error .dot{background:#d45c5c}
-.status{font-size:21px;font-weight:700;margin:18px 0 5px;line-height:1.45}
-.sub{color:#7b8697;font-size:15px;line-height:1.65}
-.qrbox{display:none;margin:22px auto 5px;width:270px;max-width:84%;padding:10px;background:#fff;border:1px solid #e6ebf1;border-radius:18px}
+body{margin:0;min-height:100vh;padding:24px 14px 40px;background:#f4f7fb;color:#172033}
+button,a,input{font-family:inherit}
+.wrap{width:min(100%,480px);margin:0 auto}
+.head{text-align:center;padding:2px 0 18px}
+.head h1{margin:0;font-size:27px;font-weight:700}
+.head p{margin:5px 0 0;color:#8a95a5;font-size:13px}
+.overview{background:#fff;border:1px solid #e5eaf1;border-radius:20px;padding:7px 16px;box-shadow:0 12px 34px rgba(32,48,78,.06)}
+.system{display:flex;align-items:center;gap:12px;padding:14px 0}
+.system+.system{border-top:1px solid #edf1f5}
+.sysicon{width:40px;height:40px;border-radius:12px;background:#f2f5f9;display:grid;place-items:center;font-weight:700;color:#5d6a7d;flex:0 0 auto}
+.sysbody{min-width:0;flex:1}
+.sysname{font-size:15px;font-weight:700;margin-bottom:2px}
+.sysmsg{font-size:13px;color:#7b8697;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 9px;font-size:12px;font-weight:600;background:#eef2f6;color:#657184}
+.pill:before{content:"";width:7px;height:7px;border-radius:50%;background:#98a3b2}
+.pill.ok{background:#e9f8ef;color:#187442}.pill.ok:before{background:#27a667}
+.pill.wait{background:#fff4e6;color:#9a5b14}.pill.wait:before{background:#e39a35}
+.pill.work{background:#edf3ff;color:#3760a4}.pill.work:before{background:#5788e4}
+.pill.err{background:#fdeeee;color:#a13d3d}.pill.err:before{background:#d45c5c}
+.action{display:none;margin-top:14px;background:#fff;border:1px solid #e5eaf1;border-radius:22px;padding:21px;box-shadow:0 14px 38px rgba(32,48,78,.08)}
+.action.show{display:block}
+.actionTitle{font-size:20px;font-weight:700;margin:0 0 5px;text-align:center}
+.actionSub{color:#7b8697;font-size:14px;line-height:1.6;text-align:center}
+.qrbox{display:none;margin:19px auto 5px;width:270px;max-width:84%;padding:10px;background:#fff;border:1px solid #e6ebf1;border-radius:18px}
 .qrbox img{display:block;width:100%;height:auto;border-radius:8px}
-.count{display:none;text-align:center;font-size:48px;font-weight:700;margin:16px 0 0}
-.count span{font-size:16px;font-weight:500;color:#8490a1;margin-left:4px}
-.btn{display:none;width:100%;border:0;border-radius:15px;min-height:56px;padding:15px 18px;margin-top:20px;background:#2f6fed;color:#fff;font-size:20px;font-weight:700;text-align:center;text-decoration:none;cursor:pointer}
-.otpbox{display:none;margin-top:22px}
-.otpref{text-align:center;color:#7b8697;font-size:14px;margin-bottom:10px}
-.otpinput{width:100%;height:66px;border:1.5px solid #ccd5e1;border-radius:15px;background:#fff;text-align:center;font-size:31px;font-weight:700;letter-spacing:12px;padding-left:12px;outline:none;color:#172033}
+.count{display:none;text-align:center;font-size:43px;font-weight:700;margin:14px 0 0}
+.count span{font-size:15px;font-weight:500;color:#8490a1;margin-left:3px}
+.openbtn{display:none;width:100%;border:0;border-radius:14px;min-height:54px;padding:14px 17px;margin-top:18px;background:#2f6fed;color:#fff;font-size:18px;font-weight:700;text-align:center;text-decoration:none}
+.otpbox{display:none;margin-top:19px}
+.otpref{text-align:center;color:#7b8697;font-size:13px;margin-bottom:9px}
+.otpinput{width:100%;height:64px;border:1.5px solid #ccd5e1;border-radius:14px;background:#fff;text-align:center;font-size:30px;font-weight:700;letter-spacing:11px;padding-left:11px;outline:none;color:#172033}
 .otpinput:focus{border-color:#2f6fed;box-shadow:0 0 0 4px rgba(47,111,237,.10)}
-.otpbtn{display:block;width:100%;border:0;border-radius:15px;min-height:56px;padding:14px 18px;margin-top:13px;background:#2f6fed;color:#fff;font-size:19px;font-weight:700;cursor:pointer}
+.otpbtn{display:block;width:100%;border:0;border-radius:14px;min-height:54px;padding:13px 17px;margin-top:12px;background:#2f6fed;color:#fff;font-size:18px;font-weight:700;cursor:pointer}
 .otpbtn:disabled{background:#c7cfdd;cursor:default}
-.otperr{min-height:22px;text-align:center;margin-top:10px;font-size:14px;color:#b54848}
-.updated{text-align:center;margin-top:14px;color:#98a1af;font-size:13px}
-@media(max-width:360px){.card{padding:18px}.qrbox{max-width:90%}}
+.otperr{min-height:21px;text-align:center;margin-top:9px;font-size:13px;color:#b54848}
+.footer{text-align:center;margin-top:13px;color:#98a1af;font-size:12px}
+.connection{display:none;margin-top:14px;padding:11px 13px;border-radius:13px;background:#fff8f8;border:1px solid #f2d7da;color:#9d4848;font-size:13px;text-align:center}
+@media(max-width:360px){body{padding-left:10px;padding-right:10px}.overview{padding-left:13px;padding-right:13px}.action{padding:18px}.qrbox{max-width:90%}}
 </style>
 </head>
 <body>
 <main class="wrap">
-  <header class="head"><h1 id="title">Login</h1></header>
-  <section class="card">
-    <div id="badge" class="badge"><span class="dot"></span><span id="badgeText">กำลังเชื่อมต่อ...</span></div>
-    <div id="status" class="status">กำลังรอ FDH Automation</div>
-    <div id="sub" class="sub">ระบบจะอัปเดตสถานะให้อัตโนมัติ</div>
+  <header class="head">
+    <h1>AllC Login</h1>
+    <p>สถานะการเข้าสู่ระบบ</p>
+  </header>
+
+  <section class="overview">
+    <div class="system">
+      <div class="sysicon">E</div>
+      <div class="sysbody">
+        <div class="sysname">eClaim</div>
+        <div id="eMsg" class="sysmsg">กำลังตรวจสถานะ...</div>
+      </div>
+      <div id="ePill" class="pill">กำลังตรวจ</div>
+    </div>
+    <div class="system">
+      <div class="sysicon">F</div>
+      <div class="sysbody">
+        <div class="sysname">FDH</div>
+        <div id="fMsg" class="sysmsg">กำลังตรวจสถานะ...</div>
+      </div>
+      <div id="fPill" class="pill">กำลังตรวจ</div>
+    </div>
+  </section>
+
+  <section id="action" class="action">
+    <h2 id="actionTitle" class="actionTitle"></h2>
+    <div id="actionSub" class="actionSub"></div>
     <div id="qrbox" class="qrbox"><img id="qr" alt="Login QR Code"></div>
     <div id="count" class="count">-- <span>วินาที</span></div>
-    <a id="open" class="btn" href="#">เปิดแอป</a>
+    <a id="open" class="openbtn" href="#">เปิดแอป</a>
+
     <div id="otpbox" class="otpbox">
       <div id="otpref" class="otpref"></div>
-      <input id="otpinput" class="otpinput" type="tel" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="------" aria-label="OTP 6 หลัก">
+      <input id="otpinput" class="otpinput" type="tel" inputmode="numeric"
+             autocomplete="one-time-code" maxlength="6" placeholder="------"
+             aria-label="OTP 6 หลัก">
       <button id="otpbtn" class="otpbtn" type="button">ส่ง OTP</button>
       <div id="otperr" class="otperr"></div>
     </div>
-    <div id="updated" class="updated"></div>
   </section>
+
+  <div id="connection" class="connection">ยังเชื่อมต่อ AllC Automation ไม่ได้</div>
+  <div id="updated" class="footer"></div>
 </main>
+
 <script>
 (() => {
-  const BUILD='FDH-ALERTQR-OTP-PRIORITY-20260827-1845';
-  const title=document.getElementById('title'),badge=document.getElementById('badge'),badgeText=document.getElementById('badgeText');
-  const status=document.getElementById('status'),sub=document.getElementById('sub'),qrbox=document.getElementById('qrbox'),qr=document.getElementById('qr');
-  const count=document.getElementById('count'),open=document.getElementById('open'),updated=document.getElementById('updated');
-  const otpbox=document.getElementById('otpbox'),otpref=document.getElementById('otpref'),otpinput=document.getElementById('otpinput'),otpbtn=document.getElementById('otpbtn'),otperr=document.getElementById('otperr');
+  const BUILD='ALLC-LINE-ONCE-WEB-STATUS-20260831-1115';
+  const ePill=document.getElementById('ePill'),eMsg=document.getElementById('eMsg');
+  const fPill=document.getElementById('fPill'),fMsg=document.getElementById('fMsg');
+  const action=document.getElementById('action'),actionTitle=document.getElementById('actionTitle'),actionSub=document.getElementById('actionSub');
+  const qrbox=document.getElementById('qrbox'),qr=document.getElementById('qr'),count=document.getElementById('count');
+  const open=document.getElementById('open'),otpbox=document.getElementById('otpbox'),otpref=document.getElementById('otpref');
+  const otpinput=document.getElementById('otpinput'),otpbtn=document.getElementById('otpbtn'),otperr=document.getElementById('otperr');
+  const updated=document.getElementById('updated'),connection=document.getElementById('connection');
+
   let baseUrl='',expiresAt=0,serverOffset=0,lastLocatorCheck=0;
 
-  function setBadge(kind,text){badge.className='badge'+(kind?' '+kind:'');badgeText.textContent=text}
-  function clearAction(){open.style.display='none';open.href='#';qrbox.style.display='none';count.style.display='none';otpbox.style.display='none';otperr.textContent='';expiresAt=0}
-  function showQr(img){if(img){qr.src='data:image/png;base64,'+img;qrbox.style.display='block'}else qrbox.style.display='none'}
+  function setPill(el,kind,text){el.className='pill'+(kind?' '+kind:'');el.textContent=text}
+  function normalize(v){return String(v||'').toLowerCase()}
+
+  function hideAction(){
+    action.classList.remove('show');
+    qrbox.style.display='none';count.style.display='none';
+    open.style.display='none';open.href='#';
+    otpbox.style.display='none';otperr.textContent='';
+    expiresAt=0;
+  }
+
+  function beginAction(title,sub){
+    action.classList.add('show');
+    actionTitle.textContent=title;
+    actionSub.textContent=sub||'';
+  }
+
+  function showQr(img){
+    if(img){qr.src='data:image/png;base64,'+img;qrbox.style.display='block'}
+    else qrbox.style.display='none';
+  }
+
   function renderCountdown(){
     if(!expiresAt){count.style.display='none';return}
     const left=Math.max(0,Math.ceil((expiresAt-(Date.now()+serverOffset))/1000));
-    count.style.display='block';count.innerHTML=left+' <span>วินาที</span>';
-    if(left<=0){expiresAt=0;count.style.display='none';qrbox.style.display='none';open.style.display='none';setBadge('warn','QR หมดอายุ');status.textContent='กำลังรอ QR รอบใหม่';sub.textContent='ระบบจะอัปเดตให้อัตโนมัติ'}
+    count.style.display='block';
+    count.innerHTML=left+' <span>วินาที</span>';
+    if(left<=0){expiresAt=0;count.style.display='none';qrbox.style.display='none';open.style.display='none'}
   }
+
   async function refreshLocator(force=false){
     if(!force&&Date.now()-lastLocatorCheck<4500)return;
     lastLocatorCheck=Date.now();
@@ -88,219 +152,153 @@ button,a{font-family:inherit}
     if(d.status!=='online'||!/^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/i.test(candidate))throw new Error('Tunnel not ready');
     baseUrl=candidate;
   }
-  async function getState(path){try{const r=await fetch(baseUrl+path+'?t='+Date.now(),{cache:'no-store',mode:'cors'});if(!r.ok)throw 0;return await r.json()}catch{return null}}
 
-  function renderOtp(p){
-    clearAction();
-    title.textContent='FDH OTP';
+  async function getState(path){
+    try{
+      const r=await fetch(baseUrl+path+'?t='+Date.now(),{cache:'no-store',mode:'cors'});
+      if(!r.ok)throw 0;
+      return await r.json();
+    }catch{return null}
+  }
 
-    const s=String(p.otpStatus||'').toLowerCase();
+  function renderEclaimStatus(t){
+    const s=normalize(t?.sessionStatus);
+    if(s==='logged-in'){setPill(ePill,'ok','พร้อม');eMsg.textContent='Session ใช้งานได้';return}
+    if(t?.active&&t?.deepLink){setPill(ePill,'wait','รอ ThaiD');eMsg.textContent='ต้องยืนยันตัวตนจากมือถือ';return}
+    if(s==='checking'){setPill(ePill,'work','กำลังตรวจ');eMsg.textContent='กำลังตรวจ Session';return}
+    if(['logging-in','waiting-confirmation','waiting-login','login-entry'].includes(s)){setPill(ePill,'work','กำลัง Login');eMsg.textContent='กำลังเตรียม ThaiD';return}
+    if(s==='error'){setPill(ePill,'err','มีปัญหา');eMsg.textContent=t?.sessionMessage||'Login ไม่สำเร็จ';return}
+    setPill(ePill,'','ยังไม่ Login');eMsg.textContent='ยังไม่มีขั้นตอนที่ต้องทำบนมือถือ';
+  }
 
-    if(s==='received'||s==='processing'){
-      setBadge('ready','รับ OTP แล้ว');
-      status.textContent='รับ OTP แล้ว · กำลังส่งเข้า FDH';
-    }else if(s==='expired'){
-      setBadge('warn','OTP หมดอายุ');
-      status.textContent='OTP หมดอายุ';
-    }else if(s==='error'){
-      setBadge('error','OTP มีปัญหา');
-      status.textContent='OTP ยังไม่ผ่าน';
-    }else{
-      setBadge('','รอ OTP');
-      status.textContent='กรอกรหัส OTP 6 หลัก';
+  function renderFdhStatus(p){
+    const s=normalize(p?.status),os=normalize(p?.otpStatus);
+    const otpActive=p?.otpRequired===true&&['waiting','received','processing'].includes(os);
+
+    if(s==='logged-in'){setPill(fPill,'ok','พร้อม');fMsg.textContent='Session/Token ใช้งานได้';return}
+    if(otpActive){
+      setPill(fPill,os==='waiting'?'wait':'work',os==='waiting'?'รอ OTP':'กำลังยืนยัน');
+      fMsg.textContent=os==='waiting'?'ต้องกรอก OTP จากมือถือ':'รับ OTP แล้ว กำลังดำเนินการ';
+      return;
     }
+    if(['credential-login','account-confirm','provider-login','logging-in','waiting-qr','checking'].includes(s)){
+      setPill(fPill,'work','กำลัง Login');fMsg.textContent=p?.message||'กำลังเข้าสู่ระบบ';return;
+    }
+    if(s==='error'||os==='error'){setPill(fPill,'err','มีปัญหา');fMsg.textContent=p?.message||p?.otpMessage||'Login ไม่สำเร็จ';return}
+    setPill(fPill,'','ยังไม่ Login');fMsg.textContent='ยังไม่มีขั้นตอนที่ต้องทำบนมือถือ';
+  }
 
-    sub.textContent=p.otpMessage||'เปิด LINE OA หมอพร้อม คัดลอก OTP แล้ววางที่นี่';
-    otpref.textContent=p.otpRefCode ? 'Ref: '+p.otpRefCode : '';
+  function renderThaiDAction(t){
+    if(!(t?.active&&t?.deepLink))return false;
+    beginAction('ยืนยัน eClaim ผ่าน ThaiD','แตะปุ่มด้านล่างเพื่อเปิด ThaiD');
+    otpbox.style.display='none';
+    showQr(t.imageBase64);
+    expiresAt=t.expiresAt?new Date(t.expiresAt).getTime():0;
+    open.textContent='เปิด ThaiD';open.href=t.deepLink;open.style.display='block';
+    renderCountdown();
+    return true;
+  }
 
-    otpbox.style.display='block';
+  function renderOtpAction(p){
+    const s=normalize(p?.otpStatus);
+    const active=p?.otpRequired===true&&['waiting','received','processing'].includes(s);
+    if(!active)return false;
+
+    beginAction('กรอก OTP สำหรับ FDH',p?.otpMessage||'นำ OTP 6 หลักจาก LINE OA หมอพร้อมมากรอกที่นี่');
+    qrbox.style.display='none';open.style.display='none';otpbox.style.display='block';
+    otpref.textContent=p?.otpRefCode?'Ref: '+p.otpRefCode:'';
+
     const writable=s==='waiting';
-    otpbtn.disabled=!writable;
-    otpinput.disabled=!writable;
+    otpinput.disabled=!writable;otpbtn.disabled=!writable;
+    if(s==='received')otperr.textContent='รับ OTP แล้ว · กำลังส่งเข้า FDH';
+    else if(s==='processing')otperr.textContent='กำลังยืนยัน OTP';
+    else otperr.textContent='';
 
-    if(writable){
-      setTimeout(()=>{try{otpinput.focus()}catch{}},80);
-    }
-
-    if(p.otpExpiresAt){
-      expiresAt=new Date(p.otpExpiresAt).getTime();
-      renderCountdown();
-    }
-
-    updated.textContent=p.otpUpdatedAt
-      ? 'อัปเดตล่าสุด '+new Date(p.otpUpdatedAt).toLocaleTimeString('th-TH')
-      : '';
+    expiresAt=p?.otpExpiresAt?new Date(p.otpExpiresAt).getTime():0;
+    renderCountdown();
+    if(writable)setTimeout(()=>{try{otpinput.focus()}catch{}},80);
+    return true;
   }
 
   async function submitOtp(){
     const value=(otpinput.value||'').replace(/\D/g,'').slice(0,6);
     otpinput.value=value;
+    if(value.length!==6){otperr.textContent='กรุณากรอก OTP ให้ครบ 6 หลัก';otpinput.focus();return}
+    if(!baseUrl){otperr.textContent='ยังเชื่อมต่อ AllC Automation ไม่ได้';return}
 
-    if(value.length!==6){
-      otperr.textContent='กรุณากรอก OTP ให้ครบ 6 หลัก';
-      otpinput.focus();
-      return;
-    }
-
-    if(!baseUrl){
-      otperr.textContent='ยังเชื่อมต่อเครื่อง FDH ไม่ได้';
-      return;
-    }
-
-    otpbtn.disabled=true;
-    otperr.textContent='กำลังส่ง OTP...';
-
+    otpbtn.disabled=true;otperr.textContent='กำลังส่ง OTP...';
     try{
       const r=await fetch(baseUrl+'/api/provider/otp/submit',{
-        method:'POST',
-        mode:'cors',
-        cache:'no-store',
+        method:'POST',mode:'cors',cache:'no-store',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({otp:value})
       });
 
-      let data=null;
-      try{data=await r.json()}catch{}
-
-      // Erase the OTP from the page as soon as the request finishes.
+      let data=null;try{data=await r.json()}catch{}
       otpinput.value='';
 
       if(!r.ok||!data?.ok){
         otperr.textContent=data?.message||'ส่ง OTP ไม่สำเร็จ';
-        otpbtn.disabled=false;
-        otpinput.disabled=false;
-        otpinput.focus();
-        return;
+        otpbtn.disabled=false;otpinput.disabled=false;otpinput.focus();return;
       }
 
       otperr.textContent='ส่ง OTP แล้ว · รอระบบตรวจสอบ';
-      status.textContent='กำลังกรอก OTP ใน FDH';
     }catch{
       otpinput.value='';
       otperr.textContent='ส่ง OTP ไม่สำเร็จ · ตรวจสอบการเชื่อมต่อ';
-      otpbtn.disabled=false;
-      otpinput.disabled=false;
+      otpbtn.disabled=false;otpinput.disabled=false;
     }
   }
 
-  otpinput.addEventListener('input',()=>{
-    otpinput.value=(otpinput.value||'').replace(/\D/g,'').slice(0,6);
-    otperr.textContent='';
-  });
-  otpinput.addEventListener('keydown',e=>{
-    if(e.key==='Enter') submitOtp();
-  });
+  otpinput.addEventListener('input',()=>{otpinput.value=(otpinput.value||'').replace(/\D/g,'').slice(0,6);otperr.textContent=''});
+  otpinput.addEventListener('keydown',e=>{if(e.key==='Enter')submitOtp()});
   otpbtn.addEventListener('click',submitOtp);
-
-  function renderProvider(p){
-    const otpState=String(p?.otpStatus||'').toLowerCase();
-    const hasOtpState=
-      p?.otpRequired===true ||
-      ['waiting','received','processing','expired','error'].includes(otpState);
-
-    if(hasOtpState){
-      renderOtp(p);
-      return true;
-    }
-
-    title.textContent='Provider ID Login';
-    updated.textContent=p.updatedAt?'อัปเดตล่าสุด '+new Date(p.updatedAt).toLocaleTimeString('th-TH'):'';
-    if(p.active&&p.imageBase64){
-      showQr(p.imageBase64);expiresAt=p.expiresAt?new Date(p.expiresAt).getTime():0;setBadge('ready','พร้อม Login');status.textContent='Provider ID QR พร้อมแล้ว';
-      if(p.payloadKind==='uri'&&p.openUri){sub.textContent='ตรวจพบ QR แบบลิงก์ · ลองเปิด MOPH ID ได้';open.textContent='เปิด MOPH ID';open.href=p.openUri;open.style.display='block'}
-      else{sub.textContent='QR เป็น Token/Transaction · กรุณาสแกนด้วยแอป MOPH ID';open.style.display='none'}
-      renderCountdown();return true;
-    }
-    clearAction();
-    if(p.status==='logged-in'){setBadge('success','Login สำเร็จ');status.textContent='FDH พร้อมใช้งาน ✓';sub.textContent='Session/Token พร้อมแล้ว'}
-    else if(p.status==='logging-in'||p.status==='waiting-qr'){setBadge('','กำลัง Login');status.textContent='กำลังเตรียม Provider ID';sub.textContent=p.message||'QR จะขึ้นอัตโนมัติเมื่อพร้อม'}
-    else if(p.status==='expired'){setBadge('warn','QR หมดอายุ');status.textContent='กำลังรอ Provider ID QR ใหม่';sub.textContent='ระบบจะอัปเดตให้อัตโนมัติ'}
-    else if(p.status==='error'){setBadge('error','Login ไม่สำเร็จ');status.textContent='FDH Login มีปัญหา';sub.textContent=p.message||'ตรวจสอบ FDH Automation ที่เครื่องหลัก'}
-    else{setBadge('','รอ Login');status.textContent='กำลังรอ FDH Provider ID';sub.textContent='เริ่มงาน FDH ที่เครื่องหลัก แล้ว QR จะขึ้นที่นี่'}
-    return ['logging-in','waiting-qr','login-required','error','expired'].includes(p.status);
-  }
-
-  function renderThaid(s){
-    title.textContent='ThaiD Login';updated.textContent=s.updatedAt?'อัปเดตล่าสุด '+new Date(s.updatedAt).toLocaleTimeString('th-TH'):'';
-    if(s.active&&s.deepLink){
-      showQr(s.imageBase64);expiresAt=s.expiresAt?new Date(s.expiresAt).getTime():0;setBadge('ready','พร้อม Login');status.textContent='QR ThaiD พร้อมแล้ว';sub.textContent='กด “เปิด ThaiD” เพื่อยืนยันตัวตน';
-      open.textContent='เปิด ThaiD';open.href=s.deepLink;open.style.display='block';renderCountdown();return;
-    }
-    clearAction();
-    if(s.sessionStatus==='logged-in'){setBadge('success','Login สำเร็จ');status.textContent='eClaim พร้อมใช้งาน ✓';sub.textContent='Session ยังใช้งานได้'}
-    else if(s.sessionStatus==='checking'){setBadge('','กำลังตรวจ Session');status.textContent='กำลังตรวจ eClaim Session';sub.textContent='รอสักครู่'}
-    else if(s.sessionStatus==='login-required'){setBadge('warn','ต้อง Login');status.textContent='eClaim ต้อง Login ใหม่';sub.textContent='ระบบกำลังเตรียม ThaiD'}
-    else if(s.sessionStatus==='logging-in'||s.sessionStatus==='waiting-confirmation'){setBadge('','กำลัง Login');status.textContent='กำลังเตรียม ThaiD Login';sub.textContent='QR จะขึ้นอัตโนมัติเมื่อพร้อม'}
-    else{setBadge('','รอ Login');status.textContent='กำลังรอ eClaim';sub.textContent='ระบบจะอัปเดตให้อัตโนมัติ'}
-  }
 
   async function poll(){
     try{
       await refreshLocator(false);
-      if(!baseUrl) throw 0;
+      if(!baseUrl)throw 0;
 
       const [p,t]=await Promise.all([
         getState('/api/provider/public-state'),
         getState('/api/thaid/public-state')
       ]);
 
+      if(!p&&!t)throw 0;
+      connection.style.display='none';
+
       const serverTime=p?.serverTime||t?.serverTime;
-      if(serverTime){
-        serverOffset=new Date(serverTime).getTime()-Date.now();
-      }
+      if(serverTime)serverOffset=new Date(serverTime).getTime()-Date.now();
 
-      // ABSOLUTE PRIORITY: FDH OTP.
-      // Even if eClaim is simultaneously login-required, OTP must own the mobile
-      // screen until it is submitted/expired.
-      const otpState=String(p?.otpStatus||'').toLowerCase();
-      const otpActive=
-        p?.otpRequired===true ||
-        ['waiting','received','processing','expired','error'].includes(otpState);
+      renderEclaimStatus(t);
+      renderFdhStatus(p);
 
-      if(p && otpActive){
-        renderOtp(p);
-        return;
-      }
+      // No generic "ต้อง Login" card.
+      // Action card appears only when the phone has actual work.
+      hideAction();
+      if(!renderOtpAction(p))renderThaiDAction(t);
 
-      // Next priority: active FDH/provider flow.
-      if(p && (
-        p.active ||
-        ['credential-login','account-confirm','logging-in','waiting-qr','login-required','error','expired']
-          .includes(String(p.status||'').toLowerCase())
-      )){
-        renderProvider(p);
-        return;
-      }
+      const stamps=[p?.otpUpdatedAt,p?.updatedAt,t?.updatedAt]
+        .filter(Boolean).map(x=>new Date(x).getTime()).filter(Number.isFinite);
 
-      // eClaim/ThaiD only owns the page when there is no active FDH/OTP flow.
-      if(t){
-        renderThaid(t);
-        return;
-      }
+      updated.textContent=stamps.length
+        ? 'อัปเดตล่าสุด '+new Date(Math.max(...stamps)).toLocaleTimeString('th-TH')
+        : '';
 
-      if(p){
-        renderProvider(p);
-        return;
-      }
-
-      throw 0;
     }catch{
-      baseUrl='';
-      clearAction();
-      title.textContent='Login';
-      setBadge('error','ยังเชื่อมต่อไม่ได้');
-      status.textContent='กำลังรอ FDH Automation';
-      sub.textContent='กำลังค้นหาการเชื่อมต่อล่าสุด...';
-      updated.textContent='';
+      baseUrl='';hideAction();
+      setPill(ePill,'','ไม่ทราบ');setPill(fPill,'','ไม่ทราบ');
+      eMsg.textContent='รอการเชื่อมต่อ';fMsg.textContent='รอการเชื่อมต่อ';
+      connection.style.display='block';updated.textContent='';
       try{await refreshLocator(true)}catch{}
     }
   }
 
   poll();
-  setInterval(poll,800);
+  setInterval(poll,900);
   setInterval(renderCountdown,250);
 })();
 </script>
-<div id="fdhBuild" data-build="FDH-ALERTQR-OTP-PRIORITY-20260827-1845" style="display:none"></div>
+<div data-build="ALLC-LINE-ONCE-WEB-STATUS-20260831-1115" style="display:none"></div>
 </body>
 </html>
