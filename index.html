@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f4f7fb">
-<meta name="allc-build" content="ALLC-LINE-ONCE-WEB-STATUS-20260831-1115">
+<meta name="allc-build" content="ALLC-NOTIFY-ONCE-OTP-CENTER-20260901-1615">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -41,13 +41,56 @@ button,a,input{font-family:inherit}
 .count{display:none;text-align:center;font-size:43px;font-weight:700;margin:14px 0 0}
 .count span{font-size:15px;font-weight:500;color:#8490a1;margin-left:3px}
 .openbtn{display:none;width:100%;border:0;border-radius:14px;min-height:54px;padding:14px 17px;margin-top:18px;background:#2f6fed;color:#fff;font-size:18px;font-weight:700;text-align:center;text-decoration:none}
-.otpbox{display:none;margin-top:19px}
-.otpref{text-align:center;color:#7b8697;font-size:13px;margin-bottom:9px}
-.otpinput{width:100%;height:64px;border:1.5px solid #ccd5e1;border-radius:14px;background:#fff;text-align:center;font-size:30px;font-weight:700;letter-spacing:11px;padding-left:11px;outline:none;color:#172033}
+.otpbox{display:none;margin:20px auto 0;text-align:center}
+.otpref{text-align:center;color:#7b8697;font-size:13px;margin-bottom:10px}
+.otpinput{
+  display:block;
+  width:min(292px,88%);
+  height:66px;
+  margin:0 auto;
+  border:1.5px solid #ccd5e1;
+  border-radius:15px;
+  background:#fff;
+  color:#172033;
+  text-align:center;
+  font-size:31px;
+  font-weight:700;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:12px;
+  text-indent:6px;
+  padding:0 12px;
+  outline:none;
+  line-height:66px
+}
+.otpinput::placeholder{
+  color:#c2cad6;
+  letter-spacing:9px;
+  text-indent:4px
+}
 .otpinput:focus{border-color:#2f6fed;box-shadow:0 0 0 4px rgba(47,111,237,.10)}
-.otpbtn{display:block;width:100%;border:0;border-radius:14px;min-height:54px;padding:13px 17px;margin-top:12px;background:#2f6fed;color:#fff;font-size:18px;font-weight:700;cursor:pointer}
+.otpbtn{
+  display:block;
+  width:min(292px,88%);
+  border:0;
+  border-radius:14px;
+  min-height:52px;
+  padding:13px 17px;
+  margin:12px auto 0;
+  background:#2f6fed;
+  color:#fff;
+  font-size:18px;
+  font-weight:700;
+  cursor:pointer
+}
 .otpbtn:disabled{background:#c7cfdd;cursor:default}
-.otperr{min-height:21px;text-align:center;margin-top:9px;font-size:13px;color:#b54848}
+.otperr{
+  width:min(320px,94%);
+  min-height:21px;
+  margin:9px auto 0;
+  text-align:center;
+  font-size:13px;
+  color:#b54848
+}
 .footer{text-align:center;margin-top:13px;color:#98a1af;font-size:12px}
 .connection{display:none;margin-top:14px;padding:11px 13px;border-radius:13px;background:#fff8f8;border:1px solid #f2d7da;color:#9d4848;font-size:13px;text-align:center}
 @media(max-width:360px){body{padding-left:10px;padding-right:10px}.overview{padding-left:13px;padding-right:13px}.action{padding:18px}.qrbox{max-width:90%}}
@@ -89,8 +132,8 @@ button,a,input{font-family:inherit}
     <div id="otpbox" class="otpbox">
       <div id="otpref" class="otpref"></div>
       <input id="otpinput" class="otpinput" type="tel" inputmode="numeric"
-             autocomplete="one-time-code" maxlength="6" placeholder="------"
-             aria-label="OTP 6 หลัก">
+             autocomplete="one-time-code" pattern="[0-9]*" maxlength="6"
+             placeholder="· · · · · ·" aria-label="OTP 6 หลัก">
       <button id="otpbtn" class="otpbtn" type="button">ส่ง OTP</button>
       <div id="otperr" class="otperr"></div>
     </div>
@@ -102,7 +145,7 @@ button,a,input{font-family:inherit}
 
 <script>
 (() => {
-  const BUILD='ALLC-LINE-ONCE-WEB-STATUS-20260831-1115';
+  const BUILD='ALLC-NOTIFY-ONCE-OTP-CENTER-20260901-1615';
   const ePill=document.getElementById('ePill'),eMsg=document.getElementById('eMsg');
   const fPill=document.getElementById('fPill'),fMsg=document.getElementById('fMsg');
   const action=document.getElementById('action'),actionTitle=document.getElementById('actionTitle'),actionSub=document.getElementById('actionSub');
@@ -299,6 +342,6 @@ button,a,input{font-family:inherit}
   setInterval(renderCountdown,250);
 })();
 </script>
-<div data-build="ALLC-LINE-ONCE-WEB-STATUS-20260831-1115" style="display:none"></div>
+<div data-build="ALLC-NOTIFY-ONCE-OTP-CENTER-20260901-1615" style="display:none"></div>
 </body>
 </html>
