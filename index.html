@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f4f7fb">
-<meta name="allc-build" content="ALLC-FDH-NAV-PROBE-ACTION-ONLY-20260908-1215">
+<meta name="allc-build" content="ALLC-QUEUE-FIRST-AUTH-RECOVERY-20260908-1235">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -145,7 +145,7 @@ button,a,input{font-family:inherit}
 
 <script>
 (() => {
-  const BUILD='ALLC-FDH-NAV-PROBE-ACTION-ONLY-20260908-1215';
+  const BUILD='ALLC-QUEUE-FIRST-AUTH-RECOVERY-20260908-1235';
   const overview=document.getElementById('overview');
   const ePill=document.getElementById('ePill'),eMsg=document.getElementById('eMsg');
   const fPill=document.getElementById('fPill'),fMsg=document.getElementById('fMsg');
@@ -207,8 +207,9 @@ button,a,input{font-family:inherit}
 
   function renderEclaimStatus(t){
     const s=normalize(t?.sessionStatus);
-    if(s==='logged-in'){setPill(ePill,'ok','พร้อม');eMsg.textContent='Session ใช้งานได้';return}
+    if(s==='logged-in'||s==='last-success'){setPill(ePill,'ok','ล่าสุดผ่าน');eMsg.textContent='จะตรวจอีกครั้งเมื่อมีงาน';return}
     if(t?.active&&t?.deepLink){setPill(ePill,'wait','รอ ThaiD');eMsg.textContent='ต้องยืนยันตัวตนจากมือถือ';return}
+    if(s==='idle'){setPill(ePill,'','รอคิว');eMsg.textContent='จะตรวจเมื่อถึงเวลาทำงาน';return}
     if(s==='checking'){setPill(ePill,'work','กำลังตรวจ');eMsg.textContent='กำลังตรวจ Session';return}
     if(['logging-in','waiting-confirmation','waiting-login','login-entry'].includes(s)){setPill(ePill,'work','กำลัง Login');eMsg.textContent='กำลังเตรียม ThaiD';return}
     if(s==='error'){setPill(ePill,'err','มีปัญหา');eMsg.textContent=t?.sessionMessage||'Login ไม่สำเร็จ';return}
@@ -219,12 +220,13 @@ button,a,input{font-family:inherit}
     const s=normalize(p?.status),os=normalize(p?.otpStatus);
     const otpActive=p?.otpRequired===true&&['waiting','received','processing'].includes(os);
 
-    if(s==='logged-in'){setPill(fPill,'ok','พร้อม');fMsg.textContent='Session/Token ใช้งานได้';return}
+    if(s==='logged-in'||s==='last-success'){setPill(fPill,'ok','ล่าสุดผ่าน');fMsg.textContent='จะตรวจอีกครั้งเมื่อมีงาน';return}
     if(otpActive){
       setPill(fPill,os==='waiting'?'wait':'work',os==='waiting'?'รอ OTP':'กำลังยืนยัน');
       fMsg.textContent=os==='waiting'?'ต้องกรอก OTP จากมือถือ':'รับ OTP แล้ว กำลังดำเนินการ';
       return;
     }
+    if(s==='idle'){setPill(fPill,'','รอคิว');fMsg.textContent='จะตรวจเมื่อถึงเวลาทำงาน';return}
     if(['credential-login','account-confirm','provider-login','logging-in','waiting-qr','checking'].includes(s)){
       setPill(fPill,'work','กำลัง Login');fMsg.textContent=p?.message||'กำลังเข้าสู่ระบบ';return;
     }
@@ -349,6 +351,6 @@ button,a,input{font-family:inherit}
   setInterval(renderCountdown,250);
 })();
 </script>
-<div data-build="ALLC-FDH-NAV-PROBE-ACTION-ONLY-20260908-1215" style="display:none"></div>
+<div data-build="ALLC-QUEUE-FIRST-AUTH-RECOVERY-20260908-1235" style="display:none"></div>
 </body>
 </html>
