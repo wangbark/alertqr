@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f4f7fb">
-<meta name="allc-build" content="ALLC-NOTIFY-ONCE-OTP-CENTER-20260901-1615">
+<meta name="allc-build" content="ALLC-FDH-NAV-PROBE-ACTION-ONLY-20260908-1215">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -103,7 +103,7 @@ button,a,input{font-family:inherit}
     <p>สถานะการเข้าสู่ระบบ</p>
   </header>
 
-  <section class="overview">
+  <section id="overview" class="overview">
     <div class="system">
       <div class="sysicon">E</div>
       <div class="sysbody">
@@ -145,7 +145,8 @@ button,a,input{font-family:inherit}
 
 <script>
 (() => {
-  const BUILD='ALLC-NOTIFY-ONCE-OTP-CENTER-20260901-1615';
+  const BUILD='ALLC-FDH-NAV-PROBE-ACTION-ONLY-20260908-1215';
+  const overview=document.getElementById('overview');
   const ePill=document.getElementById('ePill'),eMsg=document.getElementById('eMsg');
   const fPill=document.getElementById('fPill'),fMsg=document.getElementById('fMsg');
   const action=document.getElementById('action'),actionTitle=document.getElementById('actionTitle'),actionSub=document.getElementById('actionSub');
@@ -316,10 +317,15 @@ button,a,input{font-family:inherit}
       renderEclaimStatus(t);
       renderFdhStatus(p);
 
-      // No generic "ต้อง Login" card.
-      // Action card appears only when the phone has actual work.
+      // While the phone has an actual Login action, show ONLY that action.
+      // Do not display eClaim/FDH status rows at the same time.
       hideAction();
-      if(!renderOtpAction(p))renderThaiDAction(t);
+
+      const hasOtpAction=renderOtpAction(p);
+      const hasThaiDAction=!hasOtpAction && renderThaiDAction(t);
+      const hasLoginAction=hasOtpAction || hasThaiDAction;
+
+      overview.style.display=hasLoginAction?'none':'block';
 
       const stamps=[p?.otpUpdatedAt,p?.updatedAt,t?.updatedAt]
         .filter(Boolean).map(x=>new Date(x).getTime()).filter(Number.isFinite);
@@ -330,6 +336,7 @@ button,a,input{font-family:inherit}
 
     }catch{
       baseUrl='';hideAction();
+      overview.style.display='block';
       setPill(ePill,'','ไม่ทราบ');setPill(fPill,'','ไม่ทราบ');
       eMsg.textContent='รอการเชื่อมต่อ';fMsg.textContent='รอการเชื่อมต่อ';
       connection.style.display='block';updated.textContent='';
@@ -342,6 +349,6 @@ button,a,input{font-family:inherit}
   setInterval(renderCountdown,250);
 })();
 </script>
-<div data-build="ALLC-NOTIFY-ONCE-OTP-CENTER-20260901-1615" style="display:none"></div>
+<div data-build="ALLC-FDH-NAV-PROBE-ACTION-ONLY-20260908-1215" style="display:none"></div>
 </body>
 </html>
