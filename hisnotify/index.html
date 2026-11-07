@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>HISNotify Image</title>
+<style>
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f5f7fb;color:#172033;margin:0;min-height:100vh;display:grid;place-items:center;padding:24px}
+.box{max-width:520px;background:#fff;border:1px solid #e4e9f0;border-radius:18px;padding:22px;text-align:center;box-shadow:0 14px 38px rgba(0,0,0,.06)}
+.small{color:#7b8697;font-size:13px;margin-top:8px;word-break:break-all}
+</style>
+</head>
+<body>
+<div class="box">
+  <div id="status">กำลังเปิดรูปจาก HISNotify...</div>
+  <div id="detail" class="small"></div>
+</div>
+<script>
+(async()=>{
+  const status=document.getElementById('status');
+  const detail=document.getElementById('detail');
+  const p=new URLSearchParams(location.search).get('path')||'';
+  if(!/^\/img\/[A-Za-z0-9_.-]+\.(png|jpg)$/i.test(p)){
+    status.textContent='ลิงก์รูปไม่ถูกต้อง'; return;
+  }
+  try{
+    const urls=[
+      'https://raw.githubusercontent.com/wangbark/alertqr/main/hisnotify/current.json?t='+Date.now(),
+      './current.json?t='+Date.now()
+    ];
+    let data=null;
+    for(const u of urls){
+      try{
+        const r=await fetch(u,{cache:'no-store'});
+        if(r.ok){ data=await r.json(); if(data) break; }
+      }catch{}
+    }
+    const base=String(data?.baseUrl||'').replace(/\/+$/,'');
+    if(data?.status!=='online'||!/^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/i.test(base)){
+      throw new Error('tunnel offline');
+    }
+    location.replace(base+p);
+  }catch(e){
+    status.textContent='รูปยังเปิดไม่ได้ในขณะนี้';
+    detail.textContent='HISNotify หรือ Quick Tunnel อาจยังไม่ออนไลน์';
+  }
+})();
+</script>
+</body>
+</html>
